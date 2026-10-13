@@ -1,0 +1,29 @@
+<!doctype html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>소방본부 · RefuseLog</title><link rel="stylesheet" href="/styles.css"/></head>
+<body data-role="hq"><div class="shell dark-shell">
+  <header class="topbar"><div><div class="eyebrow">RefuseLog · Control</div><h1 id="pageTitle">소방본부</h1></div>
+    <nav class="tabs"><a href="/emt" class="tab" data-role-link="emt">구급대원</a><a href="/hq" class="tab" data-role-link="hq">소방본부</a><a href="/hospital" class="tab" data-role-link="hospital">병원</a></nav></header>
+  <section class="toolbar compact">
+    <input id="stage1Input" type="hidden"/><input id="stage2Input" type="hidden"/>
+    <span id="regionLabel" class="region-label"></span>
+    <button id="currentLocationBtn" class="btn">현재 위치</button>
+    <button id="loadHospitalsBtn" class="btn primary">새로고침</button>
+    <button id="resetRegionBtn" class="btn">기본 지역</button>
+    <button id="exportStateBtn" class="btn">로그 내보내기</button>
+    <button id="clearDataBtn" class="btn danger">초기화</button>
+  </section>
+  <section class="role-layout hq-layout">
+    <main class="right-col">
+      <div class="card"><div class="card-head"><h3>관제 맵</h3><span id="sourceBadge" class="pill success">-</span></div><div id="map" class="map large"></div></div>
+      <div class="hq-split">
+        <div class="card hq-split-card"><div class="card-head"><h3>구급차 요청</h3></div><div id="requestQueue"></div></div>
+        <div class="card hq-split-card"><div class="card-head"><h3>추천 병원</h3><span id="listSummary" class="small-muted"></span></div><div id="hospitalList"></div></div>
+      </div>
+    </main>
+    <aside class="left-col">
+      <div class="card" id="rolePanel"></div>
+      <div class="card"><h3>선택 병원 상세</h3><div id="hospitalDetailPanel" class="small-muted">병원을 선택해줘.</div></div>
+      <div class="card"><h3>이벤트 로그</h3><div id="logList"></div></div>
+    </aside>
+  </section>
+</div>
+<script src="/app.js"></script></body></html>

@@ -1,0 +1,168 @@
+<!doctype html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>구급대원 태블릿 · RefuseLog</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'Noto Sans KR',system-ui,sans-serif;background:#0f172a;color:#e2e8f0}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#1e293b;border-bottom:1px solid #334155;flex-shrink:0}
+.hdr-l{display:flex;align-items:center;gap:12px}.hdr-l h1{font-size:18px;font-weight:800;color:#fff}
+.rc{padding:6px 12px;background:#1d4ed8;color:#fff;border-radius:99px;font-size:12px;font-weight:700}
+.hdr-r{display:flex;gap:8px}
+.hb{padding:10px 16px;border-radius:12px;border:1px solid #475569;background:#334155;color:#e2e8f0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.hb:active{background:#475569}.hb.pr{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.ds{display:none;padding:10px 16px;background:#1e40af;color:#fff;font-size:14px;font-weight:700;flex-shrink:0;text-align:center}
+.ds.show{display:flex;align-items:center;justify-content:center;gap:12px}
+.ds .eta{padding:4px 10px;background:rgba(255,255,255,.2);border-radius:99px;font-size:12px}
+.ma{flex:1;min-height:200px;position:relative}#map{width:100%;height:100%}
+.mob{position:absolute;bottom:12px;right:12px;z-index:10;padding:12px 16px;background:#1e293b;color:#e2e8f0;border:1px solid #475569;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.bp{flex-shrink:0;background:#1e293b;border-top:2px solid #334155;display:flex;flex-direction:column;max-height:55vh;transition:max-height .3s}.bp.col{max-height:52px}
+.pt{display:flex;border-bottom:1px solid #334155;flex-shrink:0}
+.ptb{flex:1;padding:14px;text-align:center;font-size:14px;font-weight:700;color:#94a3b8;cursor:pointer;border-bottom:3px solid transparent}
+.ptb.act{color:#60a5fa;border-bottom-color:#3b82f6}.ptb:active{background:#334155}
+.pb{flex:1;overflow-y:auto;padding:14px 16px;-webkit-overflow-scrolling:touch}
+.ps{display:none}.ps.act{display:block}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fg{display:grid;gap:4px}.fg.w{grid-column:1/-1}
+.fg label{font-size:12px;color:#94a3b8;font-weight:600}
+.fg input,.fg select,.fg textarea{padding:14px 12px;border-radius:12px;border:1px solid #475569;background:#0f172a;color:#e2e8f0;font-size:15px;font-family:inherit;-webkit-appearance:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#3b82f6}
+.fg textarea{resize:none;height:60px}
+.sr{display:flex;gap:10px;margin-top:12px}
+.sb{flex:1;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit}
+.sb.pr{background:#1d4ed8;color:#fff}.sb.pr:active{background:#1e40af}
+.sb.st{background:#475569;color:#94a3b8;cursor:not-allowed}.sb.sm{background:#334155;color:#e2e8f0;border:1px solid #475569}
+.sb.nw{background:#059669;color:#fff}
+.sn{margin-top:10px;padding:10px;background:#065f46;border:1px solid #059669;border-radius:12px;text-align:center;font-weight:700;color:#6ee7b7;font-size:14px}
+.hc{padding:14px;background:#0f172a;border:2px solid #334155;border-radius:16px;margin-bottom:10px}
+.hc.sel{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+.hh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.hn{font-size:15px;font-weight:700;color:#f1f5f9}.hs{font-size:12px;color:#64748b;margin-top:2px}
+.hw{padding:6px 14px;border-radius:99px;font-weight:800;font-size:15px;flex-shrink:0}
+.hw.ok{background:#065f46;color:#6ee7b7}.hw.mid{background:#78350f;color:#fbbf24}.hw.high{background:#7f1d1d;color:#fca5a5}.hw.danger{background:#450a0a;color:#fca5a5}
+.hcs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.hch{padding:5px 10px;background:#334155;border-radius:99px;font-size:11px;font-weight:700;color:#94a3b8}
+.hch.api{background:#4c1d95;color:#c4b5fd}
+.hbt{width:100%;padding:14px;border:none;border-radius:12px;background:#334155;color:#e2e8f0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.hbt:active{background:#475569}
+.dr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #334155;font-size:14px}.dr:last-child{border-bottom:none}
+.dr span{color:#94a3b8}.dr strong{color:#f1f5f9}
+@media(orientation:landscape){.bp{max-height:45vh}.fg2{grid-template-columns:1fr 1fr 1fr 1fr}.fg.w{grid-column:span 2}}
+@media(min-width:1024px){.fg2{grid-template-columns:repeat(4,1fr)}.fg.w{grid-column:span 2}}
+</style></head><body>
+<div class="app">
+  <div class="hdr"><div class="hdr-l"><h1>구급대원</h1><span class="rc" id="rc">부산광역시 해운대구</span></div>
+    <div class="hdr-r"><button class="hb" id="locBtn">현재 위치</button><button class="hb pr" id="refBtn">새로고침</button><button class="hb" id="clearBtn" style="background:#dc2626;border-color:#dc2626">초기화</button><button class="hb" id="outBtn">로그아웃</button></div></div>
+  <div class="ds" id="dStrip"><span id="dText"></span><span class="eta" id="dEta"></span></div>
+  <div class="ma"><div id="map"></div><button class="mob" id="togBtn">▲ 패널</button></div>
+  <div class="bp" id="bPanel">
+    <div class="pt"><div class="ptb act" data-t="form">환자 입력</div><div class="ptb" data-t="hosp">추천 병원</div><div class="ptb" data-t="det">병원 상세</div></div>
+    <div class="pb">
+      <div class="ps act" id="tForm">
+        <div class="fg2">
+          <div class="fg"><label>성별</label><select id="reqSex"><option>남</option><option>여</option></select></div>
+          <div class="fg"><label>나이</label><input id="reqAge" placeholder="54" inputmode="numeric"></div>
+          <div class="fg w"><label>현장 위치</label><input id="reqLocation" placeholder="해운대구 우동"></div>
+          <div class="fg w"><label>주증상</label><input id="reqSymptoms" placeholder="흉통, 의식저하"></div>
+          <div class="fg"><label>KTAS</label><select id="reqKtas"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></div>
+          <div class="fg"><label>전문과</label><select id="reqSpecialty"><option>외상</option><option>심혈관</option><option>소아</option><option>신경</option><option>내과</option></select></div>
+        </div>
+        <div class="fg3" style="margin-top:10px"><div class="fg"><label>혈압</label><input id="reqBp" placeholder="120/80"></div><div class="fg"><label>맥박</label><input id="reqHr" placeholder="80" inputmode="numeric"></div><div class="fg"><label>SpO2</label><input id="reqSpo2" placeholder="98" inputmode="numeric"></div></div>
+        <div class="fg w" style="margin-top:10px"><label>메모</label><textarea id="reqMemo" placeholder="추가 정보"></textarea></div>
+        <div class="sr" id="sRow"><button class="sb pr" id="sendBtn">본부 전송</button><button class="sb sm" id="smpBtn">샘플</button></div>
+        <div id="sNote"></div>
+      </div>
+      <div class="ps" id="tHosp"><div id="hList"></div></div>
+      <div class="ps" id="tDet"><div id="hDet"><div style="color:#64748b">병원을 선택해줘.</div></div></div>
+    </div>
+  </div>
+</div>
+<!-- 카카오맵 JavaScript 키를 아래 YOUR_KAKAO_JS_KEY 자리에 입력하세요 -->
+<!-- 발급: https://developers.kakao.com → 내 애플리케이션 → 앱 키 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_JS_KEY"></script>
+<script>
+const SK='refuselog-osm-v4-state',SL={submitted:'본부 대기',dispatched:'지령 완료',accepted:'병원 수락',refused:'병원 거절',arrived:'도착 완료'};
+const $=id=>document.getElementById(id);
+let map,mMarkers=[],mOverlays=[],mLines=[],tickH;
+const state=loadState();if(!Array.isArray(state.requests))state.requests=[];
+init();
+
+function loadState(){const d={config:null,stage1:'부산광역시',stage2:'해운대구',hospitals:[],selectedHospitalId:null,requests:[],selectedRequestId:null,logs:[],myLocation:null,auth:{emt:null,hq:null},source:'unknown',emtDraft:null};try{return{...d,...JSON.parse(localStorage.getItem(SK)||'{}')}}catch{return d}}
+function save(bc=true){localStorage.setItem(SK,JSON.stringify(state));if(bc&&'BroadcastChannel' in window)new BroadcastChannel('refuselog-osm-v4').postMessage({type:'sync',state})}
+
+async function init(){
+  if(!state.auth?.emt?.loginId){window.location.href='/login';return}
+  wireTabs();wireEvts();
+  await loadCfg();$('rc').textContent=`${state.stage1} ${state.stage2}`;
+  initMap();go()
+}
+async function go(){await detectLoc();renderAll();await refreshH();startTick()}
+async function loadCfg(){try{const r=await fetch('/api/config');state.config=await r.json();state.stage1||=state.config.defaults.stage1;state.stage2||=state.config.defaults.stage2}catch{state.config={defaults:{stage1:'부산광역시',stage2:'해운대구',centerLat:35.1631,centerLon:129.1635}}}}
+
+function startTick(){clearInterval(tickH);tickH=setInterval(()=>{let ch=false;for(const r of state.requests){if(!['dispatched','accepted'].includes(r.status))continue;const t=tSt(r);if(t&&t.progress>=1&&r.status!=='arrived'){r.status='arrived';r.arrivedAt=new Date().toISOString();ch=true}}if(ch||state.requests.some(r=>['dispatched','accepted'].includes(r.status))){renderAll();if(ch)save()}},1000)}
+
+function wireEvts(){
+  $('refBtn').onclick=()=>refreshH(true);
+  $('outBtn').onclick=()=>{state.auth.emt=null;state.emtDraft=null;save();window.location.href='/login'};
+  $('clearBtn').onclick=()=>{if(confirm('모든 요청/로그 초기화?')){state.requests=[];state.selectedRequestId=null;state.logs=[];state.emtDraft=null;save();renderAll()}};
+  $('sendBtn').onclick=submitReq;$('locBtn').onclick=useCurLoc;
+  $('smpBtn').onclick=()=>{$('reqSex').value='남';$('reqAge').value='54';$('reqLocation').value='해운대구 우동';$('reqSymptoms').value='다발성 외상, 의식저하';$('reqKtas').value='2';$('reqSpecialty').value='외상';$('reqBp').value='88/54';$('reqHr').value='132';$('reqSpo2').value='91';$('reqMemo').value='교통사고';capDraft()};
+  $('togBtn').onclick=()=>{const p=$('bPanel');p.classList.toggle('col');$('togBtn').textContent=p.classList.contains('col')?'▲ 패널':'▼ 패널'};
+  ['reqSex','reqAge','reqLocation','reqSymptoms','reqKtas','reqSpecialty','reqBp','reqHr','reqSpo2','reqMemo'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener(el.tagName==='SELECT'?'change':'input',capDraft)});
+}
+function wireTabs(){document.querySelectorAll('.ptb').forEach(t=>t.onclick=()=>{document.querySelectorAll('.ptb').forEach(x=>x.classList.remove('act'));document.querySelectorAll('.ps').forEach(x=>x.classList.remove('act'));t.classList.add('act');$({form:'tForm',hosp:'tHosp',det:'tDet'}[t.dataset.t]).classList.add('act')})}
+window.__selH=id=>selH(id);
+
+function initMap(){const el=$('map');if(!el||typeof kakao==='undefined')return;map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(state.config?.defaults?.centerLat||35.1631,state.config?.defaults?.centerLon||129.1635),level:8})}
+function clearMap(){mMarkers.forEach(m=>m.setMap(null));mMarkers=[];mOverlays.forEach(o=>o.setMap(null));mOverlays=[];mLines.forEach(l=>l.setMap(null));mLines=[]}
+function addMk(lat,lon,html,sz=30){const d=document.createElement('div');d.innerHTML=html;d.style.cssText=`width:${sz}px;height:${sz}px;cursor:pointer`;const o=new kakao.maps.CustomOverlay({map,position:new kakao.maps.LatLng(lat,lon),content:d,yAnchor:.5,xAnchor:.5});mOverlays.push(o)}
+
+function renderMap(fit=false){
+  if(!map)return;clearMap();
+  const bounds=new kakao.maps.LatLngBounds();let hb=false;
+  const req=aReq(),origin=rOrig(req)||state.myLocation,asgn=req?.assignedHospitalId?hBy(req.assignedHospitalId):null;
+  if(state.myLocation&&isFinite(state.myLocation.lat)&&isFinite(state.myLocation.lon)){addMk(state.myLocation.lat,state.myLocation.lon,'<div style="width:14px;height:14px;background:#3b82f6;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.4)"></div>',14);bounds.extend(new kakao.maps.LatLng(state.myLocation.lat,state.myLocation.lon));hb=true}
+  recL(req).forEach((h,i)=>{if(!isFinite(h.wgs84Lat)||!isFinite(h.wgs84Lon))return;const sel=state.selectedHospitalId===h.id,isA=asgn?.id===h.id;const p=new kakao.maps.LatLng(h.wgs84Lat,h.wgs84Lon);const c=isA?'#1d4ed8':sel?'#2563eb':'#7c3aed';const bg=pFl(h.prediction?.predictedPressure);const sz=isA?32:sel?28:22;addMk(h.wgs84Lat,h.wgs84Lon,`<div onclick="window.__selH('${h.id}')" style="width:${sz}px;height:${sz}px;background:${bg};border:3px solid ${c};border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:${isA?13:10}px;font-weight:900">${isA?'H':i+1}</div>`,sz);bounds.extend(p);hb=true;if(sel||isA){const ci=new kakao.maps.Circle({map,center:p,radius:isA?400:280,strokeWeight:2,strokeColor:'#1d4ed8',strokeOpacity:.5,fillOpacity:0,strokeStyle:'dashed'});mLines.push(ci)}});
+  if(req&&asgn&&isFinite(asgn.wgs84Lat)&&isFinite(asgn.wgs84Lon)&&origin&&isFinite(origin.lat)&&isFinite(origin.lon)&&['dispatched','accepted','arrived'].includes(req.status)){const t=tSt(req);const ln=new kakao.maps.Polyline({map,path:[new kakao.maps.LatLng(origin.lat,origin.lon),new kakao.maps.LatLng(asgn.wgs84Lat,asgn.wgs84Lon)],strokeWeight:4,strokeColor:'#1d4ed8',strokeOpacity:.8,strokeStyle:req.status==='arrived'?'solid':'dashed'});mLines.push(ln);bounds.extend(new kakao.maps.LatLng(asgn.wgs84Lat,asgn.wgs84Lon));hb=true;if(t?.currentLat){addMk(t.currentLat,t.currentLon,'<div style="width:24px;height:24px;background:#dc2626;border:3px solid #fff;border-radius:50%;box-shadow:0 3px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:900">A</div>',24)}}
+  if(fit&&hb)map.setBounds(bounds,80,80,80,80);
+}
+
+async function refreshH(t=false){capDraft();const req=aReq(),p=new URLSearchParams({stage1:state.stage1,stage2:state.stage2});if(req?.ktas)p.set('ktas',req.ktas);if(req?.specialty)p.set('specialty',req.specialty);const o=rOrig(req)||state.myLocation;if(o?.lat){p.set('userLat',o.lat);p.set('userLon',o.lon)}
+  try{const r=await fetch(`/api/hospitals?${p}`);const d=await r.json();if(!r.ok||!d.ok)throw new Error();state.hospitals=d.hospitals||[];state.source=d.source;if(!state.selectedHospitalId&&state.hospitals[0])state.selectedHospitalId=state.hospitals[0].id;save();renderAll();renderMap(true)}catch{renderAll();renderMap()}}
+async function detectLoc(){if(!navigator.geolocation)return;return new Promise(res=>{navigator.geolocation.getCurrentPosition(p=>{state.myLocation={lat:p.coords.latitude,lon:p.coords.longitude};save();renderMap(true);res()},()=>res(),{enableHighAccuracy:true,timeout:4500,maximumAge:60000})})}
+async function useCurLoc(){await detectLoc();if(!state.myLocation?.lat)return;try{const r=await fetch(`/api/reverse-geocode?lat=${state.myLocation.lat}&lon=${state.myLocation.lon}`);const d=await r.json();if(d.ok){state.stage1=d.stage1;state.stage2=d.stage2;$('rc').textContent=`${state.stage1} ${state.stage2}`}}catch{}save();await refreshH()}
+
+function renderAll(){renderForm();renderHL();renderDet();renderDS();renderMap()}
+function renderForm(){
+  const d=state.emtDraft||{};['Sex','Age','Location','Symptoms','Ktas','Specialty','Bp','Hr','Spo2','Memo'].forEach(k=>{const id='req'+k,el=$(id),v=d[k.toLowerCase()];if(el&&v&&document.activeElement!==el)el.value=v});
+  const cur=aReq(),locked=cur&&['submitted','dispatched','accepted','arrived'].includes(cur.status);
+  $('sendBtn').textContent=locked?'전송완료':'본부 전송';$('sendBtn').className=locked?'sb st':'sb pr';$('sendBtn').disabled=locked;
+  if($('smpBtn'))$('smpBtn').style.display=locked?'none':'';
+  let nb=document.getElementById('nwBtn');if(locked&&!nb){nb=document.createElement('button');nb.id='nwBtn';nb.className='sb nw';nb.textContent='새 요청';$('sRow').appendChild(nb);nb.onclick=()=>{state.emtDraft=null;state.selectedRequestId=null;save();renderAll()}}
+  if(!locked&&nb)nb.remove();
+  $('sNote').innerHTML=locked?'<div class="sn">본부 전송 완료</div>':'';
+}
+function renderHL(){
+  const list=recL(aReq()).slice(0,5);
+  $('hList').innerHTML=list.length?list.map((h,i)=>{const sel=state.selectedHospitalId===h.id;return`<div class="hc ${sel?'sel':''}"><div class="hh"><div><div class="hn">${i+1}. ${esc(h.dutyName)}</div><div class="hs">${esc(h.dutyEmclsName||'')}</div></div><div class="hw ${pCl(h.prediction?.predictedPressure)}">${h.prediction?.predictedWaitMinutes??'-'}분</div></div><div class="hcs"><span class="hch">거리 ${fD(h.prediction?.distanceKm)}</span><span class="hch">이동 ${eT(h.prediction?.distanceKm)}분</span><span class="hch">병상 ${h.hvec??'-'}</span><span class="hch api">API</span></div><button class="hbt" data-s="${h.id}">선택</button></div>`}).join(''):'<div style="color:#64748b;padding:20px;text-align:center">병원 로드중...</div>';
+  $('hList').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>selH(b.dataset.s));
+}
+function renderDet(){const h=hBy(state.selectedHospitalId);if(!h){$('hDet').innerHTML='<div style="color:#64748b">병원 선택해줘.</div>';return}$('hDet').innerHTML=`<div style="margin-bottom:10px"><div class="hn">${esc(h.dutyName)}</div><div class="hs">${esc(h.dutyEmclsName||'')} · ${esc(h.dutyAddr||'')}</div></div><div class="dr"><span>예상 대기</span><strong>${h.prediction?.predictedWaitMinutes??'-'}분</strong></div><div class="dr"><span>이동</span><strong>${eT(h.prediction?.distanceKm)}분</strong></div><div class="dr"><span>거리</span><strong>${fD(h.prediction?.distanceKm)}</strong></div><div class="dr"><span>병상</span><strong>${h.hvec??'-'}</strong></div><div class="dr"><span>수술실</span><strong>${h.hvoc??'-'}</strong></div><div class="dr"><span>CT/MRI</span><strong>${yn(h.hvctayn)?'CT':'—'} ${yn(h.hvmriayn)?'/MRI':''}</strong></div><div class="dr"><span>전화</span><strong>${esc(h.dutyTel3||h.hv1||'-')}</strong></div>`}
+function renderDS(){const cur=aReq(),asgn=cur?.assignedHospitalId?hBy(cur.assignedHospitalId):null;const s=$('dStrip');if(asgn&&['dispatched','accepted','arrived'].includes(cur.status)){s.classList.add('show');const t=tSt(cur);$('dText').textContent=`지령: ${asgn.dutyName} · ${SL[cur.status]||cur.status}`;$('dEta').textContent=t?`도착 약 ${t.remainingMin}분`:''}else s.classList.remove('show')}
+
+function capDraft(){if(!$('reqSex'))return;state.emtDraft={sex:$('reqSex').value,age:$('reqAge').value.trim(),location:$('reqLocation').value.trim()||state.stage2,symptoms:$('reqSymptoms').value.trim(),ktas:$('reqKtas').value,specialty:$('reqSpecialty').value,bp:$('reqBp').value.trim(),hr:$('reqHr').value.trim(),spo2:$('reqSpo2').value.trim(),memo:$('reqMemo').value.trim()};save({broadcast:false})}
+function submitReq(){capDraft();const d=state.emtDraft||{},ex=aReq();const r={id:ex?.status==='submitted'?ex.id:`req-${Math.random().toString(36).slice(2,8)}-${Date.now().toString(36)}`,...d,location:d.location||state.stage2,stage1:state.stage1,stage2:state.stage2,originLat:state.myLocation?.lat||null,originLon:state.myLocation?.lon||null,status:'submitted',preferredHospitalId:state.selectedHospitalId,assignedHospitalId:null,createdAt:ex?.status==='submitted'?ex.createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),ambulanceLabel:state.auth.emt?.label||'구급차',submittedBy:state.auth.emt?.loginId||'emt01'};const i=state.requests.findIndex(x=>x.id===r.id);if(i>=0)state.requests[i]=r;else state.requests.push(r);state.selectedRequestId=r.id;save();renderAll();refreshH()}
+function selH(id){state.selectedHospitalId=id;const r=aReq();if(r?.status==='submitted'){r.preferredHospitalId=id;const i=state.requests.findIndex(x=>x.id===r.id);if(i>=0)state.requests[i]=r}save();renderAll();document.querySelectorAll('.ptb').forEach(t=>t.classList.remove('act'));document.querySelectorAll('.ps').forEach(s=>s.classList.remove('act'));document.querySelector('[data-t="det"]').classList.add('act');$('tDet').classList.add('act')}
+function aReq(){const lid=state.auth?.emt?.loginId;const own=[...state.requests].filter(r=>!lid||(r.submittedBy||'emt01')===lid).sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));const sel=state.requests.find(r=>r.id===state.selectedRequestId);return sel&&own.some(r=>r.id===sel.id)?sel:own[0]||null}
+function recL(req){const l=[...(state.hospitals||[])],p=req?.preferredHospitalId,a=req?.assignedHospitalId;return l.sort((x,y)=>{const rk=i=>i.id===a?4:i.id===state.selectedHospitalId?3:i.id===p?2:0;return(rk(y)-rk(x))||(y.prediction?.recommendationScore||0)-(x.prediction?.recommendationScore||0)})}
+function hBy(id){return state.hospitals.find(h=>h.id===id)||null}
+function rOrig(r){return r&&isFinite(r.originLat)?{lat:r.originLat,lon:r.originLon}:null}
+function tSt(r){const h=hBy(r?.assignedHospitalId),o=rOrig(r);if(!r?.dispatchedAt||!h||!o||!isFinite(h.wgs84Lat))return null;const tm=Number(r.travelMinutesEstimate)||eT(hav(o.lat,o.lon,h.wgs84Lat,h.wgs84Lon));const el=Math.max(0,(Date.now()-new Date(r.dispatchedAt).getTime())/60000),p=Math.min(1,Math.max(0,tm?el/tm:0));return{progress:p,currentLat:o.lat+(h.wgs84Lat-o.lat)*p,currentLon:o.lon+(h.wgs84Lon-o.lon)*p,remainingMin:Math.max(0,Math.ceil(tm*(1-p)))}}
+function pCl(v){return v==='낮음'?'ok':v==='보통'?'mid':v==='높음'?'high':'danger'}
+function pFl(v){return v==='낮음'?'#22c55e':v==='보통'?'#f59e0b':v==='높음'?'#ef4444':'#991b1b'}
+function fD(v){return v!==null&&v!==undefined&&Number.isFinite(v)?`${v}km`:'-'}
+function yn(v){return String(v||'').toUpperCase()==='Y'}
+function eT(d){return d!==null&&d!==undefined&&Number.isFinite(d)?Math.max(4,Math.min(45,Math.round(d*2.6+3))):12}
+function hav(a,b,c,d){if(![a,b,c,d].every(isFinite))return null;const t=v=>v*Math.PI/180,R=6371,dl=t(c-a),dn=t(d-b),s=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dn/2)**2;return Math.round(R*2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s))*10)/10}
+function esc(t){return String(t??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+</script></body></html>

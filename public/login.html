@@ -1,0 +1,245 @@
+<!doctype html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>RefuseLog · 로그인</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',system-ui,sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f172a,#1e293b 40%,#1e3a5f);display:flex;align-items:center;justify-content:center;padding:20px}
+.lc{width:min(540px,100%);animation:fu .5s ease}@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
+.brand{text-align:center;margin-bottom:28px}.brand h1{font-size:30px;font-weight:800;color:#fff}.brand p{font-size:14px;color:#94a3b8;margin-top:6px}
+.card{background:#fff;border-radius:22px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.region-bar{display:flex;gap:8px;margin-bottom:20px;align-items:center}
+.region-bar label{font-size:13px;font-weight:700;color:#475569;white-space:nowrap}
+.region-bar select{flex:1;padding:12px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit}
+.region-bar select:focus{outline:none;border-color:#3b82f6}
+.rtabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.rtab{padding:12px 8px;border-radius:14px;border:2px solid #e2e8f0;background:#f8fafc;text-align:center;cursor:pointer;transition:all .2s}
+.rtab:hover{border-color:#93c5fd}.rtab.active{border-color:#1d4ed8;background:#1d4ed8;color:#fff}
+.rtab .ri{font-size:24px;display:block;margin-bottom:3px}.rtab .rn{font-size:13px;font-weight:700}.rtab .rs{font-size:10px;color:#64748b;margin-top:1px}.rtab.active .rs{color:#bfdbfe}
+.fg{margin-bottom:12px}.fg label{display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:4px}
+.fg select,.fg input{width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:inherit;background:#fff}
+.fg select:focus,.fg input:focus{outline:none;border-color:#3b82f6}
+.lb{width:100%;padding:14px;background:#1d4ed8;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px}
+.lb:hover{background:#1e40af}
+.tt{margin-top:8px;display:flex;align-items:center;justify-content:center}.tt label{font-size:13px;color:#475569;cursor:pointer;display:flex;align-items:center;gap:8px}.tt input{width:16px;height:16px;accent-color:#1d4ed8}
+.err{display:none;padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:12px;font-size:13px;margin-top:10px;text-align:center}.err.show{display:block;animation:sh .4s}@keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.ah{margin-top:16px;padding:14px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:14px;max-height:200px;overflow-y:auto}
+.ah h4{font-size:12px;font-weight:700;color:#0369a1;margin-bottom:6px}.ah ul{list-style:none;font-size:11px;color:#475569;display:grid;gap:3px}
+.ah li{padding:5px 10px;background:#fff;border-radius:8px;border:1px solid #e0f2fe;cursor:pointer}.ah li:hover{background:#e0f2fe}.ah li strong{color:#0c4a6e}
+.ft{text-align:center;margin-top:16px;font-size:11px;color:#64748b}
+</style></head><body>
+<div class="lc">
+  <div class="brand"><h1>RefuseLog</h1><p>응급실 수용 판단 지원 플랫폼</p></div>
+  <div class="card">
+    <div class="region-bar">
+      <label>지역</label>
+      <select id="regionSel">
+        <option value="busan">부산광역시</option>
+        <option value="seoul">서울특별시</option>
+        <option value="daegu">대구광역시</option>
+        <option value="incheon">인천광역시</option>
+        <option value="gwangju">광주광역시</option>
+        <option value="daejeon">대전광역시</option>
+        <option value="ulsan">울산광역시</option>
+        <option value="sejong">세종특별자치시</option>
+        <option value="gyeonggi">경기도</option>
+        <option value="gangwon">강원특별자치도</option>
+        <option value="chungbuk">충청북도</option>
+        <option value="chungnam">충청남도</option>
+        <option value="jeonbuk">전북특별자치도</option>
+        <option value="jeonnam">전라남도</option>
+        <option value="gyeongbuk">경상북도</option>
+        <option value="gyeongnam">경상남도</option>
+        <option value="jeju">제주특별자치도</option>
+      </select>
+    </div>
+    <div class="rtabs">
+      <div class="rtab active" data-role="emt"><span class="ri">🚑</span><div class="rn">구급대원</div><div class="rs">환자 입력·이송</div></div>
+      <div class="rtab" data-role="hq"><span class="ri">🏛️</span><div class="rn">소방본부</div><div class="rs">관제·병원 지정</div></div>
+      <div class="rtab" data-role="hospital"><span class="ri">🏥</span><div class="rn">병원</div><div class="rs">수용·거절 응답</div></div>
+    </div>
+    <div id="fStd">
+      <div class="fg"><label>계정</label><select id="accSel"></select></div>
+      <div class="fg"><label>아이디</label><input id="lid" placeholder="아이디"></div>
+      <div class="fg"><label>비밀번호</label><input id="lpw" type="password" placeholder="비밀번호"></div>
+    </div>
+    <div id="fHosp" style="display:none">
+      <div class="fg"><label>병원</label><select id="hSel"><option>병원 로드중...</option></select></div>
+      <div class="fg"><label>아이디</label><input id="hlid" placeholder="병원 아이디"></div>
+      <div class="fg"><label>비밀번호</label><input id="hlpw" type="password" placeholder="병원 비밀번호"></div>
+    </div>
+    <button class="lb" id="loginBtn">로그인</button>
+    <div class="tt" id="ttBox"><label><input type="checkbox" id="tabletMode"/> 태블릿 모드 (구급대원 전용)</label></div>
+    <div class="err" id="errMsg">아이디/비밀번호를 확인해줘.</div>
+    <div class="ah" id="hintBox"><h4 id="hintTitle">계정 목록</h4><ul id="hintList"></ul></div>
+  </div>
+  <div class="ft">거부로그(RefuseLog) · 응급실 뺑뺑이 방지 MVP</div>
+</div>
+<script>
+const SK='refuselog-osm-v4-state';
+
+// 지역별 계정 데이터
+const REGIONS = {
+  busan: { name:'부산', stage1:'부산광역시', stage2:'해운대구', lat:35.1631, lon:129.1635,
+    emt:[{id:'busan-emt01',pw:'pw1191',lb:'부산-구급차 1'},{id:'busan-emt02',pw:'pw1192',lb:'부산-구급차 2'},{id:'busan-emt03',pw:'pw1193',lb:'부산-구급차 3'}],
+    hq:[{id:'busan-hq01',pw:'pw9111',lb:'부산-소방본부 A'},{id:'busan-hq02',pw:'pw9112',lb:'부산-소방본부 B'}] },
+  seoul: { name:'서울', stage1:'서울특별시', stage2:'종로구', lat:37.5665, lon:126.9780,
+    emt:[{id:'seoul-emt01',pw:'pw1191',lb:'서울-구급차 1'},{id:'seoul-emt02',pw:'pw1192',lb:'서울-구급차 2'},{id:'seoul-emt03',pw:'pw1193',lb:'서울-구급차 3'}],
+    hq:[{id:'seoul-hq01',pw:'pw9111',lb:'서울-소방본부 A'},{id:'seoul-hq02',pw:'pw9112',lb:'서울-소방본부 B'}] },
+  daegu: { name:'대구', stage1:'대구광역시', stage2:'중구', lat:35.8714, lon:128.6014,
+    emt:[{id:'daegu-emt01',pw:'pw1191',lb:'대구-구급차 1'},{id:'daegu-emt02',pw:'pw1192',lb:'대구-구급차 2'}],
+    hq:[{id:'daegu-hq01',pw:'pw9111',lb:'대구-소방본부'}] },
+  incheon: { name:'인천', stage1:'인천광역시', stage2:'남동구', lat:37.4563, lon:126.7052,
+    emt:[{id:'incheon-emt01',pw:'pw1191',lb:'인천-구급차 1'},{id:'incheon-emt02',pw:'pw1192',lb:'인천-구급차 2'}],
+    hq:[{id:'incheon-hq01',pw:'pw9111',lb:'인천-소방본부'}] },
+  gwangju: { name:'광주', stage1:'광주광역시', stage2:'동구', lat:35.1595, lon:126.8526,
+    emt:[{id:'gwangju-emt01',pw:'pw1191',lb:'광주-구급차 1'},{id:'gwangju-emt02',pw:'pw1192',lb:'광주-구급차 2'}],
+    hq:[{id:'gwangju-hq01',pw:'pw9111',lb:'광주-소방본부'}] },
+  daejeon: { name:'대전', stage1:'대전광역시', stage2:'중구', lat:36.3504, lon:127.3845,
+    emt:[{id:'daejeon-emt01',pw:'pw1191',lb:'대전-구급차 1'},{id:'daejeon-emt02',pw:'pw1192',lb:'대전-구급차 2'}],
+    hq:[{id:'daejeon-hq01',pw:'pw9111',lb:'대전-소방본부'}] },
+  ulsan: { name:'울산', stage1:'울산광역시', stage2:'남구', lat:35.5384, lon:129.3114,
+    emt:[{id:'ulsan-emt01',pw:'pw1191',lb:'울산-구급차 1'},{id:'ulsan-emt02',pw:'pw1192',lb:'울산-구급차 2'}],
+    hq:[{id:'ulsan-hq01',pw:'pw9111',lb:'울산-소방본부'}] },
+  sejong: { name:'세종', stage1:'세종특별자치시', stage2:'', lat:36.5040, lon:127.0100,
+    emt:[{id:'sejong-emt01',pw:'pw1191',lb:'세종-구급차 1'}],
+    hq:[{id:'sejong-hq01',pw:'pw9111',lb:'세종-소방본부'}] },
+  gyeonggi: { name:'경기', stage1:'경기도', stage2:'수원시', lat:37.2636, lon:127.0286,
+    emt:[{id:'gyeonggi-emt01',pw:'pw1191',lb:'경기-구급차 1'},{id:'gyeonggi-emt02',pw:'pw1192',lb:'경기-구급차 2'},{id:'gyeonggi-emt03',pw:'pw1193',lb:'경기-구급차 3'}],
+    hq:[{id:'gyeonggi-hq01',pw:'pw9111',lb:'경기-소방본부 A'},{id:'gyeonggi-hq02',pw:'pw9112',lb:'경기-소방본부 B'}] },
+  gangwon: { name:'강원', stage1:'강원특별자치도', stage2:'춘천시', lat:37.8813, lon:127.7298,
+    emt:[{id:'gangwon-emt01',pw:'pw1191',lb:'강원-구급차 1'},{id:'gangwon-emt02',pw:'pw1192',lb:'강원-구급차 2'}],
+    hq:[{id:'gangwon-hq01',pw:'pw9111',lb:'강원-소방본부'}] },
+  chungbuk: { name:'충북', stage1:'충청북도', stage2:'청주시', lat:36.6357, lon:127.4912,
+    emt:[{id:'chungbuk-emt01',pw:'pw1191',lb:'충북-구급차 1'},{id:'chungbuk-emt02',pw:'pw1192',lb:'충북-구급차 2'}],
+    hq:[{id:'chungbuk-hq01',pw:'pw9111',lb:'충북-소방본부'}] },
+  chungnam: { name:'충남', stage1:'충청남도', stage2:'천안시', lat:36.8151, lon:127.1139,
+    emt:[{id:'chungnam-emt01',pw:'pw1191',lb:'충남-구급차 1'},{id:'chungnam-emt02',pw:'pw1192',lb:'충남-구급차 2'}],
+    hq:[{id:'chungnam-hq01',pw:'pw9111',lb:'충남-소방본부'}] },
+  jeonbuk: { name:'전북', stage1:'전북특별자치도', stage2:'전주시', lat:35.8242, lon:127.1480,
+    emt:[{id:'jeonbuk-emt01',pw:'pw1191',lb:'전북-구급차 1'},{id:'jeonbuk-emt02',pw:'pw1192',lb:'전북-구급차 2'}],
+    hq:[{id:'jeonbuk-hq01',pw:'pw9111',lb:'전북-소방본부'}] },
+  jeonnam: { name:'전남', stage1:'전라남도', stage2:'무안군', lat:34.8161, lon:126.4629,
+    emt:[{id:'jeonnam-emt01',pw:'pw1191',lb:'전남-구급차 1'},{id:'jeonnam-emt02',pw:'pw1192',lb:'전남-구급차 2'}],
+    hq:[{id:'jeonnam-hq01',pw:'pw9111',lb:'전남-소방본부'}] },
+  gyeongbuk: { name:'경북', stage1:'경상북도', stage2:'포항시', lat:36.0190, lon:129.3435,
+    emt:[{id:'gyeongbuk-emt01',pw:'pw1191',lb:'경북-구급차 1'},{id:'gyeongbuk-emt02',pw:'pw1192',lb:'경북-구급차 2'}],
+    hq:[{id:'gyeongbuk-hq01',pw:'pw9111',lb:'경북-소방본부'}] },
+  gyeongnam: { name:'경남', stage1:'경상남도', stage2:'창원시', lat:35.2281, lon:128.6815,
+    emt:[{id:'gyeongnam-emt01',pw:'pw1191',lb:'경남-구급차 1'},{id:'gyeongnam-emt02',pw:'pw1192',lb:'경남-구급차 2'}],
+    hq:[{id:'gyeongnam-hq01',pw:'pw9111',lb:'경남-소방본부'}] },
+  jeju: { name:'제주', stage1:'제주특별자치도', stage2:'제주시', lat:33.4890, lon:126.4983,
+    emt:[{id:'jeju-emt01',pw:'pw1191',lb:'제주-구급차 1'},{id:'jeju-emt02',pw:'pw1192',lb:'제주-구급차 2'}],
+    hq:[{id:'jeju-hq01',pw:'pw9111',lb:'제주-소방본부'}] },
+};
+
+let region='busan', role='emt', hospitals=[];
+
+function curRegion(){ return REGIONS[region] || REGIONS.busan; }
+function curAccs(){ return curRegion()[role] || []; }
+function allAccs(r){ return [...(REGIONS[region]?.emt||[]), ...(REGIONS[region]?.hq||[])]; }
+
+function credFor(h){if(!h)return{id:'',pw:''};const k=String(h.hpid||h.id||'').replace(/[^a-zA-Z0-9]/g,'').toLowerCase();const t=String(h.dutyTel3||h.hv1||h.hpid||'').replace(/\D/g,'');return{id:k||'hospital',pw:`pw${t.slice(-4)||k.slice(-4)||'1199'}`}}
+
+async function loadHospitals(){
+  const rg = curRegion();
+  for(let i=0;i<3;i++){
+    try{const r=await fetch(`/api/hospitals?stage1=${encodeURIComponent(rg.stage1)}&stage2=${encodeURIComponent(rg.stage2)}`);const d=await r.json();
+      if(d.ok&&d.hospitals?.length){hospitals=d.hospitals.map(h=>({...h,dutyName:h.dutyName&&h.dutyName!=='이름 없음'?h.dutyName:(h.hpid||'병원')}));updateHospSel();return}}catch{}
+    await new Promise(r=>setTimeout(r,1000));
+  }
+  updateHospSel();
+}
+
+function updateHospSel(){
+  const s=document.getElementById('hSel');
+  s.innerHTML=hospitals.length?hospitals.map(h=>`<option value="${h.id}">${h.dutyName} (${h.dutyEmclsName||''})</option>`).join(''):'<option>병원 없음 - 새로고침 해줘</option>';
+  if(hospitals.length){const c=credFor(hospitals[0]);document.getElementById('hlid').value=c.id;document.getElementById('hlpw').value=c.pw}
+  updateHints();
+}
+
+function updateHints(){
+  const ul=document.getElementById('hintList');
+  const rg = curRegion();
+  if(role==='hospital'){
+    document.getElementById('hintTitle').textContent=`${rg.name} 병원별 계정`;
+    ul.innerHTML=hospitals.length?hospitals.slice(0,12).map(h=>{const c=credFor(h);return`<li data-hid="${h.id}" data-lid="${c.id}" data-pw="${c.pw}"><strong>${h.dutyName}</strong> → ${c.id} / ${c.pw}</li>`}).join(''):'<li>병원 데이터 로드중...</li>';
+    ul.querySelectorAll('li[data-hid]').forEach(li=>li.onclick=()=>{document.getElementById('hSel').value=li.dataset.hid;document.getElementById('hlid').value=li.dataset.lid;document.getElementById('hlpw').value=li.dataset.pw});
+  }else{
+    const accs=curAccs();
+    document.getElementById('hintTitle').textContent=role==='emt'?`${rg.name} 구급대원 계정`:`${rg.name} 소방본부 계정`;
+    ul.innerHTML=accs.map(a=>`<li data-lid="${a.id}" data-pw="${a.pw}"><strong>${a.lb}</strong> → ${a.id} / ${a.pw}</li>`).join('');
+    ul.querySelectorAll('li[data-lid]').forEach(li=>li.onclick=()=>{document.getElementById('lid').value=li.dataset.lid;document.getElementById('lpw').value=li.dataset.pw;
+      const sel=document.getElementById('accSel');for(let i=0;i<sel.options.length;i++)if(sel.options[i].value===li.dataset.lid){sel.selectedIndex=i;break}});
+  }
+}
+
+function updateAccSelect(){
+  const accs=curAccs();
+  const s=document.getElementById('accSel');
+  s.innerHTML=accs.map(a=>`<option value="${a.id}">${a.lb} · ${a.id}</option>`).join('');
+  if(accs[0]){document.getElementById('lid').value=accs[0].id;document.getElementById('lpw').value=accs[0].pw}
+}
+
+// 지역 변경
+document.getElementById('regionSel').addEventListener('change',e=>{
+  region=e.target.value;
+  updateAccSelect();updateHints();
+  if(role==='hospital')loadHospitals();
+});
+
+// 역할 탭
+document.querySelectorAll('.rtab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.rtab').forEach(x=>x.classList.remove('active'));t.classList.add('active');role=t.dataset.role;
+  document.getElementById('fStd').style.display=role==='hospital'?'none':'';
+  document.getElementById('fHosp').style.display=role==='hospital'?'':'none';
+  document.getElementById('ttBox').style.display=role==='emt'?'':'none';
+  document.getElementById('errMsg').classList.remove('show');
+  if(role!=='hospital')updateAccSelect();
+  else loadHospitals();
+  updateHints();
+});
+
+document.getElementById('accSel').addEventListener('change',e=>{const a=curAccs().find(x=>x.id===e.target.value);if(a){document.getElementById('lid').value=a.id;document.getElementById('lpw').value=a.pw}});
+document.getElementById('hSel').addEventListener('change',e=>{const h=hospitals.find(x=>x.id===e.target.value);const c=credFor(h);document.getElementById('hlid').value=c.id;document.getElementById('hlpw').value=c.pw});
+document.getElementById('loginBtn').onclick=doLogin;
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+function doLogin(){
+  document.getElementById('errMsg').classList.remove('show');
+  const rg = curRegion();
+
+  if(role==='hospital'){
+    const hid=document.getElementById('hSel').value,h=hospitals.find(x=>x.id===hid);
+    const lid=document.getElementById('hlid').value.trim(),pw=document.getElementById('hlpw').value.trim();
+    const exp=credFor(h);
+    if(!h||lid!==exp.id||pw!==exp.pw){document.getElementById('errMsg').classList.add('show');return}
+    let st={};try{st=JSON.parse(localStorage.getItem(SK)||'{}')}catch{}
+    st.hospitalSession={hospitalId:h.id,loginId:lid,loggedInAt:new Date().toISOString()};
+    st.selectedHospitalId=h.id;
+    st.region=region; st.stage1=rg.stage1; st.stage2=rg.stage2;
+    localStorage.setItem(SK,JSON.stringify(st));
+    window.location.href='/hospital';return;
+  }
+
+  const lid=document.getElementById('lid').value.trim(),pw=document.getElementById('lpw').value.trim();
+  // 모든 지역의 계정에서 찾기
+  let foundAcc=null, foundRegion=null;
+  for(const [rKey, rData] of Object.entries(REGIONS)){
+    const accs = rData[role] || [];
+    const match = accs.find(a=>a.id===lid&&a.pw===pw);
+    if(match){ foundAcc=match; foundRegion=rKey; break; }
+  }
+  if(!foundAcc){document.getElementById('errMsg').classList.add('show');return}
+
+  const loginRegion = REGIONS[foundRegion];
+  let st={};try{st=JSON.parse(localStorage.getItem(SK)||'{}')}catch{}
+  st.auth=st.auth||{emt:null,hq:null};
+  st.auth[role]={loginId:foundAcc.id,label:foundAcc.lb,region:foundRegion,loggedInAt:new Date().toISOString()};
+  st.region=foundRegion; st.stage1=loginRegion.stage1; st.stage2=loginRegion.stage2;
+  localStorage.setItem(SK,JSON.stringify(st));
+  window.location.href=role==='emt'&&document.getElementById('tabletMode')?.checked?'/emt-tablet':`/${role}`;
+}
+
+// 초기화
+(()=>{updateAccSelect();updateHints();loadHospitals()})();
+</script></body></html>

@@ -1,0 +1,6 @@
+.env
+node_modules/
+runtime-state.json
+debug.log
+*.log
+.claude/
